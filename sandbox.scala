@@ -15,10 +15,9 @@ import scala.annotation.tailrec
 extension (s: String)
   def reverseI: String =
     @tailrec
-    def reverseRec(str: String, acc: String): String = {
+    def reverseRec(str: String, acc: String): String =
       if (str.isEmpty) acc
       else reverseRec(str.tail, str.head + acc)
-    }
     reverseRec(s, "")
   def removeSpaces: String = s.replaceAll("\\s+", "")
   def lowerCase: String = s.toLowerCase
@@ -37,13 +36,26 @@ def palindrome(s: String): Boolean =
 
 // Exercise 2
 // First Factorial
-def FirstFactorial(num: Int): Int =
-  if num == 0 then 1
-  else num * FirstFactorial(num - 1)
+
+def firstFactorial(num: Int): Int =
+  // making it tail recursive to avoid stack overflow
+  // notice the overflow when using Int
+  // best way to describe this type class is using Numbers Typeclass
+  //   scala> firstFactorial(24)
+  // val res1: Int = -775946240
+  @tailrec
+  def factorialHelper(n: Int, acc: Int): Int =
+    if (n <= 0) acc
+    else factorialHelper(n - 1, n * acc)
+  factorialHelper(num, 1)
+
 object Main extends IOApp.Simple:
   def run: IO[Unit] =
     for
       _ <- IO.println("Enter a string to check if it is a palindrome")
       readLine <- IO.readLine
       result <- IO.println(palindrome(readLine))
-    yield result
+
+    // readFF <- IO.readLine
+    // result <- IO.println(firstFactorial(readFF.toInt))
+    yield ()
