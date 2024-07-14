@@ -13,6 +13,7 @@ import scala.annotation.tailrec
 
 // Exercise 1 Palindrome
 extension (s: String)
+  // tail recursive reverse homegrown implementation
   def reverseI: String =
     @tailrec
     def reverseRec(str: String, acc: String): String =
@@ -31,7 +32,7 @@ def palindrome(s: String): Boolean =
 // Welcome to Scala 3.4.1 (17.0.5, Java Java HotSpot(TM) 64-Bit Server VM).
 // Type in expressions for evaluation. Or try :help.
 
-// scala> palindrome("never odd or even".removeSpaces.reverseI)
+// scala> palindrome("never odd or even")
 // val res3: Boolean = true
 
 // Exercise 2
