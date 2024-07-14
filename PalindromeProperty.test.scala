@@ -1,4 +1,5 @@
 //> using toolkit typelevel:0.1.27
+//> org.scalatest::scalatest::3.2.17
 
 import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
@@ -21,24 +22,25 @@ extension (s: String)
 def palindrome(s: String): Boolean =
   s.removeSpaces.lowerCase === s.removeSpaces.reverseI.lowerCase
 
-object PalindromePropertyTests extends Properties("Palindrome") {
+object PalindromeProperty extends Properties("Palindrome") {
+  // A generator for random strings
+  val stringGenerator: Gen[String] = for {
+    str <- Gen.alphaStr
+  } yield str
+
   // A generator for palindrome strings
   val palindromeGen: Gen[String] = for {
     str <- Gen.alphaStr
-  } yield str
+    isPalindrome <- Gen.oneOf(true, false)
+    palindrome = if (isPalindrome) str + str.reverse else str
+  } yield palindrome
 
   property("palindrome should return true for any palindrome string") =
     "never odd or even".removeSpaces.reverseI.lowerCase === "never odd or even".removeSpaces.reverseI.lowerCase
 
   property("palindrome should return true for any palindrome string") =
     forAll(palindromeGen) { str =>
-      ???
+      palindrome(str) == true
     }
 
-//   property("palindrome should return false for any non-palindrome string") =
-//     forAll(Gen.alphaStr.suchThat(_.length > 1)) { str =>
-//       val nonPalindrome =
-//         str + "a" + str.reverse // Ensuring it's not a palindrome
-//       palindrome(nonPalindrome) == false
-//     }
 }
