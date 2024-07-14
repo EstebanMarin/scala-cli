@@ -92,22 +92,27 @@ object Main extends IOApp.Simple:
       _ <- IO.println("Enter problem number")
       _ <- IO.println("1. Palindrome")
       _ <- IO.println("2. First Factorial")
-      _ <- IO.println("3. Min Window Sbustring")
+      _ <- IO.println("3. Min Window Substring")
       readLine <- IO.readLine
       _ <- readLine match
         case "1" =>
           IO.println(
             "Enter a string to check if it is a palindrome"
-          ) *> IO.readLine.map { s =>
-            palindrome(s)
+          ) *> IO.readLine.flatMap { s =>
+            IO(palindrome(s))
+              .flatMap { result =>
+                IO.println(s"Is Palindrome: $result")
+              }
           }
 
         case "2" =>
           IO.println("Enter a number to get the first factorial")
-            *> IO.readLine.map { s =>
+            *> IO.readLine.flatMap { s =>
               // should avoid type casting
               // provide type class with smart constructors
-              firstFactorial(s.toInt)
+              IO(firstFactorial(s.toInt)).flatMap(result =>
+                IO.println(s"First Factorial: $result")
+              )
             }
         case _ =>
           IO.println("Min Window Substring") *> {
