@@ -9,16 +9,23 @@ import org.http4s.*
 import org.http4s.implicits.*
 import org.http4s.circe.*
 import cats.syntax.all.*
+import scala.annotation.tailrec
 
+// Exercise 1 Palindrome
 extension (s: String)
-  def reverseI: String = s.reverse
+  def reverseI: String =
+    @tailrec
+    def reverseRec(str: String, acc: String): String = {
+      if (str.isEmpty) acc
+      else reverseRec(str.tail, str.head + acc)
+    }
+    reverseRec(s, "")
   def removeSpaces: String = s.replaceAll("\\s+", "")
   def lowerCase: String = s.toLowerCase
 
 def palindrome(s: String): Boolean =
   s.removeSpaces.lowerCase === s.removeSpaces.reverseI.lowerCase
 
-// step 1 test the initial implementation
 // ❯ scala-cli repl sandbox.scala
 // Compiling project (Scala 3.4.1, JVM (17))
 // Compiled project (Scala 3.4.1, JVM (17))
@@ -27,6 +34,12 @@ def palindrome(s: String): Boolean =
 
 // scala> palindrome("never odd or even".removeSpaces.reverseI)
 // val res3: Boolean = true
+
+// Exercise 2
+// First Factorial
+def FirstFactorial(num: Int): Int =
+  if num == 0 then 1
+  else num * FirstFactorial(num - 1)
 object Main extends IOApp.Simple:
   def run: IO[Unit] =
     for
