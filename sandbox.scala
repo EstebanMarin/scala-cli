@@ -49,8 +49,43 @@ def firstFactorial(num: Int): Int =
     else factorialHelper(n - 1, n * acc)
   factorialHelper(num, 1)
 
-def runPalindrome(s: String) =
-  IO(palindrome(s))
+// Exercise 3
+// Min Window Substring
+type BetterDataDescription = (String, String)
+def minWindowSubString(entry: BetterDataDescription): Set[String] =
+  val (main, subString) = entry
+  val mainLength = main.length
+  val subStringLength = subString.length
+  val subStringDomainSearch: Set[String] =
+    // create a unique permutation of the substring to clearly identify the domain of search
+    // scala> "aed".permutations.permutations.toSet
+    // val res6: List[String] = List(aed, ade, ead, eda, dae, dea)
+    println(subString.permutations.toSet)
+    subString.permutations.toSet
+  val mainDomainSearch: Set[String] =
+    println(main.sliding(subStringLength).toSet)
+    main.sliding(subStringLength).toSet
+
+// ❯ scala-cli sandbox.scala
+// Compiling project (Scala 3.4.1, JVM (17))
+// Warning: there was 1 deprecation warning; re-run with -deprecation for details
+// Compiled project (Scala 3.4.1, JVM (17))
+// Enter problem number
+// 1. Palindrome
+// 2. First Factorial
+// 3. Min Window Sbustring
+// 3
+// Min Window Substring
+// Enter the main string
+// aaabaaddae
+// Enter the substring
+// aed
+// HashSet(ade, eda, dae, ead, dea, aed)
+// HashSet(aab, dda, aba, dae, aad, baa, aaa, add)
+// Min Window Substring: HashSet(dae)
+
+  mainDomainSearch.intersect(subStringDomainSearch)
+
 object Main extends IOApp.Simple:
   def run: IO[Unit] =
     for
@@ -63,17 +98,27 @@ object Main extends IOApp.Simple:
         case "1" =>
           IO.println(
             "Enter a string to check if it is a palindrome"
-          ) *> IO.readLine.flatMap { s =>
-            runPalindrome(s)
+          ) *> IO.readLine.map { s =>
+            palindrome(s)
           }
 
         case "2" =>
           IO.println("Enter a number to get the first factorial")
-            *> IO.readLine.flatMap { s =>
+            *> IO.readLine.map { s =>
               // should avoid type casting
-              IO.println(firstFactorial(s.toInt))
+              // provide type class with smart constructors
+              firstFactorial(s.toInt)
             }
         case _ =>
-          IO.println("Min Window Substring") *>
-            IO.unit
+          IO.println("Min Window Substring") *> {
+            for
+              _ <- IO.println("Enter the main string")
+              main <- IO.readLine
+              _ <- IO.println("Enter the substring")
+              subString <- IO.readLine
+              _ <- IO.println(
+                s"Min Window Substring: ${minWindowSubString((main, subString))}"
+              )
+            yield ()
+          }
     yield ()
