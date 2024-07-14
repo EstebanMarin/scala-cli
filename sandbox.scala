@@ -49,13 +49,31 @@ def firstFactorial(num: Int): Int =
     else factorialHelper(n - 1, n * acc)
   factorialHelper(num, 1)
 
+def runPalindrome(s: String) =
+  IO(palindrome(s))
 object Main extends IOApp.Simple:
   def run: IO[Unit] =
     for
-      _ <- IO.println("Enter a string to check if it is a palindrome")
+      _ <- IO.println("Enter problem number")
+      _ <- IO.println("1. Palindrome")
+      _ <- IO.println("2. First Factorial")
+      _ <- IO.println("3. Min Window Sbustring")
       readLine <- IO.readLine
-      result <- IO.println(palindrome(readLine))
+      _ <- readLine match
+        case "1" =>
+          IO.println(
+            "Enter a string to check if it is a palindrome"
+          ) *> IO.readLine.flatMap { s =>
+            runPalindrome(s)
+          }
 
-    // readFF <- IO.readLine
-    // result <- IO.println(firstFactorial(readFF.toInt))
+        case "2" =>
+          IO.println("Enter a number to get the first factorial")
+            *> IO.readLine.flatMap { s =>
+              // should avoid type casting
+              IO.println(firstFactorial(s.toInt))
+            }
+        case _ =>
+          IO.println("Min Window Substring") *>
+            IO.unit
     yield ()
